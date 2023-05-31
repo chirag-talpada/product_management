@@ -1,0 +1,24 @@
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    return queryInterface.bulkInsert('roles',[{
+      name:'User',
+      createdAt:new Date (),
+      updatedAt:new Date ()
+    },{
+      name:'Admin',
+      createdAt:new Date (),
+      updatedAt:new Date ()
+    },{
+      name:'Super Admin',
+      createdAt:new Date (),
+      updatedAt:new Date ()
+    }])
+  },
+
+  async down (queryInterface, Sequelize) {
+    return queryInterface.bulkDelete('roles', null, {});
+  }
+};
