@@ -1,8 +1,10 @@
 
 const express = require("express");
 const cors = require("cors");
-const { getUsers } = require("./controller/user.controller");
+
 const { getRoles } = require("./controller/roles.controller");
+
+const users=require('./routes/user.route')
 
 
 const app = express();
@@ -13,11 +15,14 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (req,res)=>{
-    res.send("hello")
+  res.send("hello")
 });
 
-app.get("/users", getUsers);
-app.get("/roles",getRoles)
+app.use('/api/users',users);
+
+
+
+app.get("/api/roles",getRoles)
 
 
 

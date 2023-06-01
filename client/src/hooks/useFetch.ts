@@ -10,7 +10,7 @@ type ApiDataType={
     data:unknown,
     success:boolean
 
-  }
+  },
 }
 
 const useFetch = (url:string) => {
@@ -19,21 +19,23 @@ const useFetch = (url:string) => {
   useEffect(() => {
 
     const init=async ()=>{
+      
       try {
         let apiData=await axios.get(url);
         setData( {isError:false, data:apiData.data})
-      } catch (err) {
+      } catch (err) {  
+        console.log(err);
         
         setData( {isError:true, errorMsg:'Something Went wrong!'})
       }
-        
+      
     }
     
     init();
 
   }, [url]);
 
-  return data;
+  return data?.data;
 };
 
 export default useFetch;

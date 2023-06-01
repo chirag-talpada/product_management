@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      users.belongsTo(models.roles,{
+        foreignKey: "role_id"
+      })
     }
   }
   users.init({
@@ -18,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.INTEGER,
       references:{
         model:'roles',
-        keyl:'id'
+        key:'id'
       }
     },
     username:{ 

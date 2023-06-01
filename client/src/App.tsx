@@ -4,11 +4,14 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/SuperAdmin/components/Dashboard";
 import Users from "./pages/SuperAdmin/components/Users";
 import ErrorBoundary from "./components/ErrorBoundary";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  
   return (
     <div>
+      <ToastContainer/>
       <Routes>
         <Route path="/super-admin" element={<SuperAdmin />}>
           <Route path="dashboard" element={<Dashboard/>} />

@@ -13,7 +13,7 @@ module.exports = {
         type:Sequelize.INTEGER,
         references:{
           model:'roles',
-          keyl:'id'
+          key:'id'
         }
       },
       username:{ 
@@ -22,9 +22,13 @@ module.exports = {
         allowNull:false
       },
       email:{ 
-        type:Sequelize.STRING,
-        isEmail:true,
-        unique: true,
+        type: Sequelize.STRING,
+        isEmail: true,
+        unique: {
+          arg: true,
+          msg: "This email is already exits.",
+        },
+        allowNull: false,
       },
       password:{ 
         type:Sequelize.STRING,

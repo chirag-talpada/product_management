@@ -11,18 +11,26 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userShema } from "../../pages/SuperAdmin/validationSchema";
 import useFetch from "../../hooks/useFetch";
+import axios from "axios";
+import { UserInfoType } from "../../types/user.type";
+import { toast } from "react-toastify";
 
 type rolesTyepe = {
   name: string;
 };
 
-const AddUser = () => {
+type props = {
+  closeModel: () => void;
+};
+
+const AddUser = ({ closeModel }: props) => {
   const rolesData = useFetch(`${process.env.REACT_APP_BASE_URL}/roles`);
   const [roles, setRoles] = useState<Option[]>();
+  const [loading,setLoading]=useState<boolean>(false)
 
   useEffect(() => {
     if (rolesData) {
-      let data: rolesTyepe[] = rolesData?.data?.data as rolesTyepe[];
+      let data: rolesTyepe[] = rolesData?.data as rolesTyepe[];
       let optionData: Option[] = data?.map((role) => {
         return { value: role.name, label: role.name };
       });
@@ -32,6 +40,7 @@ const AddUser = () => {
 
   const {
     setValue,
+    setError,
     control,
     register,
     handleSubmit,
@@ -40,8 +49,8 @@ const AddUser = () => {
     resolver: yupResolver(userShema),
   });
 
-  const onUserSubmit: SubmitHandler<FieldValues> = (data) => {
-    let userData: FieldValues = data;
+  const onUserSubmit: SubmitHandler<FieldValues> = async (data) => {
+    let userData: FieldValues = { ...data };
 
     //fix the object to send in backend
     Object.keys(data).forEach((key) => {
@@ -54,7 +63,36 @@ const AddUser = () => {
       }
     });
 
-    console.log(userData);
+    try {
+      
+      setLoading(true);
+      let { data } = await axios.post<UserInfoType>(
+        `${process.env.REACT_APP_BASE_URL}/users`,
+        userData
+      );
+
+      setLoading(false);
+      if (data.success) {
+        toast.success("User Added Succesfully!");
+        closeModel();
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.data.error) {
+          console.log(err);
+          
+          toast.error(err.response?.data.error.errors[0].message);
+        } else {
+          setError(err.response?.data.field, {
+            type: "custom",
+            message: err.response?.data.message,
+          });
+        }
+      } else {
+        console.log(err);
+      }
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,7 +162,7 @@ const AddUser = () => {
         <input
           type="submit"
           value="Add"
-          className="bg-black text-white px-4 py-2 w-full rounded-md cursor-pointer"
+          className={`bg-black text-white px-4 py-2 w-full rounded-md cursor-pointer ${loading?'opacity-30 pointer-events-none cursor-not-allowed':''}`}
         />
       </div>
     </form>
