@@ -2,7 +2,9 @@ const { roles, Sequelize } = require("./../models/index");
 
 const getRoles=async (req,res)=>{
     try {
-        let data = await roles.findAll({});
+        let data = await roles.findAll({
+          attributes:['name']
+        });
         return res.status(200).json({
           success: true,
           count: data.length,

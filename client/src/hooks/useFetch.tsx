@@ -5,7 +5,12 @@ import axios from 'axios';
 type ApiDataType={
   isError:boolean,
   errorMsg?:string,
-  data?:[]
+  data?:{
+    count:number,
+    data:unknown,
+    success:boolean
+
+  }
 }
 
 const useFetch = (url:string) => {
@@ -18,7 +23,8 @@ const useFetch = (url:string) => {
         let apiData=await axios.get(url);
         setData( {isError:false, data:apiData.data})
       } catch (err) {
-        setData( {isError:false, errorMsg:'Something Went wrong!'})
+        
+        setData( {isError:true, errorMsg:'Something Went wrong!'})
       }
         
     }
