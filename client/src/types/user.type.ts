@@ -1,10 +1,11 @@
 export type UserInfoType = {
   address: string | null;
   email: string;
-  first_name: string | null;
-  last_name: string | null;
-  phone_number: string | null;
-  roles: string;
+  firstname: string | null;
+  lastname: string | null;
+  phone: string | null;
+  ['role.name']: string;
   username: string;
   [key: string]: any;
 };
+
