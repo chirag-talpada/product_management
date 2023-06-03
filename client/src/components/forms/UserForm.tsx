@@ -265,7 +265,7 @@ const UserForm = ({ closeModel, defaultFormValue, isEdit }: props) => {
         <input
           type="submit"
           value={isEdit ? "Update" : "Save"}
-          className={`bg-green-600 text-green-950 px-4 py-2 w-full rounded-md cursor-pointer font-extrabold ${
+          className={`bg-green-500 text-green-950 px-4 py-2 w-full rounded-md cursor-pointer font-extrabold ${
             loading ? "opacity-30 pointer-events-none cursor-not-allowed" : ""
           }`}
         />

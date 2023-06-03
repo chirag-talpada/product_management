@@ -19,12 +19,8 @@ const getUsers = async (req, res) => {
         attributes: ["name"],
       },
       raw: true,
-      order: [
-        ["id", "ASC"],
-      ],
+      order: [["id", "ASC"]],
     });
-
-    console.log(data);
 
     return res.status(200).json({
       success: true,
@@ -82,33 +78,33 @@ const getUser = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const {
-    username,
-    email,
-    roles: roles_name,
-    address,
-    first_name,
-    last_name,
-    phone_number,
-  } = req.body;
-
-  const userData = {
-    address,
-    username,
-    email,
-    firstname: first_name,
-    lastname: last_name,
-    phone: phone_number,
-  };
-
-  if (!username | !email | !roles_name) {
-    return res.status(400).send({
-      success: false,
-      message: "Content can not be empty!",
-    });
-  }
-
   try {
+    const {
+      username,
+      email,
+      roles: roles_name,
+      address,
+      first_name,
+      last_name,
+      phone_number,
+    } = req.body;
+
+    const userData = {
+      address,
+      username,
+      email,
+      firstname: first_name,
+      lastname: last_name,
+      phone: phone_number,
+    };
+
+    if (!username | !email | !roles_name) {
+      return res.status(400).send({
+        success: false,
+        message: "Content can not be empty!",
+      });
+    }
+
     const password = generator.generate({
       length: 10,
       numbers: true,
@@ -184,42 +180,42 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  let userID = req.params.id;
-
-  const {
-    username,
-    email,
-    roles: roles_name,
-    address,
-    first_name,
-    last_name,
-    phone_number,
-  } = req.body;
-
-  const userData = {
-    address,
-    username,
-    email,
-    firstname: first_name,
-    lastname: last_name,
-    phone: phone_number,
-  };
-
-  if (!userID) {
-    return res.status(400).send({
-      success: false,
-      message: "ID not found!",
-    });
-  }
-
-  if (!username | !email | !roles_name) {
-    return res.status(400).send({
-      success: false,
-      message: "Content can not be empty!",
-    });
-  }
-
   try {
+    let userID = req.params.id;
+
+    const {
+      username,
+      email,
+      roles: roles_name,
+      address,
+      first_name,
+      last_name,
+      phone_number,
+    } = req.body;
+
+    const userData = {
+      address,
+      username,
+      email,
+      firstname: first_name,
+      lastname: last_name,
+      phone: phone_number,
+    };
+
+    if (!userID) {
+      return res.status(400).send({
+        success: false,
+        message: "ID not found!",
+      });
+    }
+
+    if (!username | !email | !roles_name) {
+      return res.status(400).send({
+        success: false,
+        message: "Content can not be empty!",
+      });
+    }
+
     const RoleID = await roles.findOne({
       attribute: ["id"],
       where: {
@@ -316,4 +312,46 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, createUser, getUser, updateUser };
+const deleteUser = async (req, res) => {
+
+  try {
+    let userID = Number(req.params.id);
+
+    if (!userID) {
+      return res.status(400).send({
+        success: false,
+        message: "ID not found!",
+      });
+    }
+
+    let data = await users.destroy({
+      where: {
+        id: userID,
+      },
+      
+    });
+    
+  
+    if (data === 1) {
+      return res.status(200).json({
+        success: true,
+        message: `User with id ${userID} is deleted`,
+      });
+    }
+    return res.status(200).json({
+      success: false,
+      message: `User with id ${userID} is not present.`,
+    });
+
+
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      success: false,
+      error: 'something went wrong',
+    });
+  }
+};
+
+module.exports = { getUsers, createUser, getUser, updateUser, deleteUser };
